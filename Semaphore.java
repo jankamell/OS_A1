@@ -1,29 +1,33 @@
-public class Semaphore{
-    private int permits; 
-    private final int maxPermits;
-    public Semaphore(int count){
+public class Semaphore {
+    private int permits;
+
+    public Semaphore(int count) {
         this.permits = count;
-        this.maxPermits = count;
     }
 
-    public synchronized void acquire() throws InterruptedException{
-        while(permits == 0){
+    public synchronized void acquire() throws InterruptedException {
+        while (permits == 0) {
             wait();
         }
         permits--;
     }
 
-    public synchronized void release(){
-       if(permits < maxPermits){
-            permits++;
-            notifyAll();
-        }
+    public synchronized void release() {
+        permits++;
+        notifyAll();
     }
 
-    public synchronized boolean tryAcquire(long timeout) throws InterruptedException
-    {
+    public synchronized boolean tryAcquire() {
+        if (permits > 0) {
+            permits--;
+            return true;
+        }
+        return false;
+    }
+
+    public synchronized boolean tryAcquire(long timeout) throws InterruptedException {
         long startTime = System.currentTimeMillis();
-        long remainingTime = timeout ;
+        long remainingTime = timeout;
 
         while (permits == 0 && remainingTime > 0) {
             wait(remainingTime);
@@ -36,5 +40,4 @@ public class Semaphore{
         }
         return false;
     }
-
-} 
+}
