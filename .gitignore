@@ -1,2 +1,4 @@
 # ---- Compiled Java files ----
 *.class
+.vscode/
+.qodo/
