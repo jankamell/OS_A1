@@ -11,7 +11,7 @@ public class Doctor extends Thread {
         this.waitingRoom = waitingRoom;
         this.treatmentRooms = treatmentRooms;
         this.stats = stats;
-        setName("D" + id);
+        setName("Doctor " + id);
     }
 
     @Override
@@ -31,11 +31,11 @@ public class Doctor extends Thread {
                     continue; 
                 }
                 else {
-                    Logger.log(getName() + " acquired a treatment room for " + patient.getName());
+                    Logger.log(getName() + " acquired a treatment room");
                 }
 
                 try {
-                    Logger.log(getName() + " is treating " + patient.getName());
+                    Logger.log(getName() + " begins treating " + patient.getName());
 
                     int treatmentTime =ThreadLocalRandom.current().nextInt(1000, 5001);
                     Thread.sleep(treatmentTime); 
@@ -43,6 +43,7 @@ public class Doctor extends Thread {
                     Logger.log(getName() + " finished treating " + patient.getName());
                 } finally {
                     treatmentRooms.release();
+                    Logger.log(getName() + " released the treatment room");
                 }
                 patient.finishTreatment();
                 stats.patientTreated();
@@ -50,7 +51,6 @@ public class Doctor extends Thread {
             }
 
         } catch (InterruptedException e) {
-            Logger.log(getName() + " is stopping");
             Thread.currentThread().interrupt();
         }
     }
